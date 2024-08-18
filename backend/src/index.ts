@@ -1,0 +1,37 @@
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import router from "./routers";
+import cookieParser from "cookie-parser";
+
+dotenv.config();
+
+if (!process.env.PORT) {
+  console.log("PORT not found!");
+}
+
+const port = process.env.PORT || 8080;
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(cookieParser());
+
+app.use("/api/v1", router);
+
+app.listen(port, () => {
+  console.log(`Server running on port : ${port}`);
+});
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI);
+} else {
+  console.log("MONGODB_URI not found ");
+}
+mongoose.connection.on("error", () => {
+  console.log("Could not connect to mongodb");
+});
+mongoose.connection.on("connected", () => {
+  console.log("Connected to mongodb!");
+});
