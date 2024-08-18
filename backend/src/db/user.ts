@@ -20,7 +20,7 @@ export const register_user = (value: Record<string, any>) =>
 //NOTE: get a user by their email:
 
 export const get_user_by_email = (email: string) =>
-  UserModel.findOne({ email });
+  UserModel.findOne({ email }).select("+password");
 
 //NOTE: get a user by their id:
 export const get_user_by_id = (id: string) => UserModel.findById(id);
