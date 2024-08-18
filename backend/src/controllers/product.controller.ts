@@ -9,7 +9,7 @@ import {
   updateProductById,
 } from "../db/product";
 import { getUserById, postedProductUpdate, UserModel } from "../db/user";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export const getAllUnsoldProducts = async (req: Request, res: Response) => {
   try {
@@ -72,9 +72,32 @@ export const updateProduct = async (req: Request, res: Response) => {
 };
 
 export const deleteProduct = async (req: Request, res: Response) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const productId = req.params.id;
     const deletedProduct = await deleteProductById(productId);
+
+    if (!deletedProduct) {
+      await session.abortTransaction();
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Update all users to remove the product from postedProducts and purchasedProducts
+    await UserModel.updateMany(
+      {
+        $or: [{ postedProducts: productId }, { purchasedProducts: productId }],
+      },
+      {
+        $pull: {
+          postedProducts: productId,
+          purchasedProducts: productId,
+        },
+      }
+    ).session(session);
+
+    await session.commitTransaction();
+
     res
       .status(200)
       .json({ message: "Product deleted successfully!", deletedProduct });

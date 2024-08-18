@@ -27,7 +27,7 @@ if (!process.env.JWT_SECRET) {
 export const isAuthenticated = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   const token = req.cookies.token;
   if (!token) {
@@ -54,23 +54,24 @@ export const isAuthenticated = async (
 export const isProductOwner = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const userId = req.indentity._id;
     const productId = req.params.id;
 
     const getProduct = await getProductById(productId);
+
     if (!getProduct) {
       return res.status(400).json({ message: "Product Not Found" });
     }
-    if (userId !== getProduct.seller) {
-      return res
-        .status(400)
-        .json({
-          message: "Unauthorized! You are not the owner of this product!",
-        });
+
+    if (userId.toString() !== getProduct.seller.toString()) {
+      return res.status(400).json({
+        message: "Unauthorized! You are not the owner of this product!",
+      });
     }
+
     next();
   } catch (error) {
     console.log(error);

@@ -1,5 +1,5 @@
 import express from "express";
-import { isAuthenticated, isProductOwner } from "../middleware/index.js";
+import { isAuthenticated, isProductOwner } from "../middleware";
 import {
   addProduct,
   buyProduct,
