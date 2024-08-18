@@ -4,9 +4,12 @@ import {
   createProduct,
   deleteProductById,
   getAllProducts,
+  getAllProductsToDisplay,
+  getProductById,
   updateProductById,
 } from "../db/product";
-import { postedProductUpdate } from "../db/user";
+import { getUserById, postedProductUpdate, UserModel } from "../db/user";
+import { Types } from "mongoose";
 
 export const getAllUnsoldProducts = async (req: Request, res: Response) => {
   try {
@@ -75,6 +78,72 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res
       .status(200)
       .json({ message: "Product deleted successfully!", deletedProduct });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const buyProduct = async (req: Request, res: Response) => {
+  try {
+    const productId = req.params.id;
+    const buyerId = req.indentity._id;
+    const product = await getProductById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    if (product.isSold === true) {
+      return res.status(400).json({ message: "Product is already sold" });
+    }
+
+    if (product.seller._id.toString() === buyerId.toString()) {
+      return res
+        .status(400)
+        .json({ message: "You can't buy your own product" });
+    }
+
+    product.isSold = true;
+    product.buyer = new Types.ObjectId(buyerId);
+    await product.save();
+
+    const buyer = await getUserById(buyerId.toString());
+    if (!buyer) {
+      return res.status(404).json({ message: "Buyer not found" });
+    }
+    buyer.purchasedProducts.push(product._id);
+    await buyer.save();
+
+    res.status(200).json({ message: "Product Purchase successful", product });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const getAllPurchasedProducts = async (req: Request, res: Response) => {
+  try {
+    const userId = req.indentity._id;
+    const products = await UserModel.findById(userId).populate(
+      "purchasedProducts"
+    );
+    res
+      .status(200)
+      .json({ message: "Products fetched successfully!", products });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export const getAllPostedProducts = async (req: Request, res: Response) => {
+  try {
+    const userId = req.indentity._id;
+    const products = await UserModel.findById(userId).populate(
+      "postedProducts"
+    );
+    res
+      .status(200)
+      .json({ message: "Products fetched successfully!", products });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error", error });

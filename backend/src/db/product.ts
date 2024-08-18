@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { ObjectId } from "mongodb";
+
 const ProductSchema = new mongoose.Schema({
   productName: { type: String, required: true },
   price: { type: Number, required: true },
@@ -17,6 +19,13 @@ export const createProduct = (value: Record<string, any>) =>
 export const getProductById = (id: string) => ProductModel.findById(id);
 
 export const getAllProducts = () => ProductModel.find().where("isSold", false);
+
+export const getAllProductsToDisplay = (sellerId: string | ObjectId) => {
+  return ProductModel.find({
+    isSold: false,
+    $or: [{ sellerId: { $ne: sellerId } }, { sellerId: null }],
+  });
+};
 
 export const getProductBySellerId = (id: string) =>
   ProductModel.find({ seller: id });

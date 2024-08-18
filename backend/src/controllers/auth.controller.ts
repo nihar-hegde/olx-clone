@@ -3,7 +3,7 @@ import {
   login_validator,
   register_validator,
 } from "../validators/user.validator";
-import { getUserByEmail, registerUser } from "../db/user";
+import { getUserByEmail, registerUser, UserModel } from "../db/user";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
