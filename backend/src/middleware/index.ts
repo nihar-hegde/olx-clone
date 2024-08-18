@@ -3,6 +3,7 @@ import e, { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { getUserById } from "../db/user";
+import { getProductById } from "../db/product";
 
 dotenv.config();
 interface IdentidyI {
@@ -26,7 +27,7 @@ if (!process.env.JWT_SECRET) {
 export const isAuthenticated = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = req.cookies.token;
   if (!token) {
@@ -43,6 +44,33 @@ export const isAuthenticated = async (
       return res.status(403).send({ message: "User Not Found" });
     }
     req.indentity = existingUser;
+    next();
+  } catch (error) {
+    console.log(error);
+    return res.status(403).send({ error });
+  }
+};
+
+export const isProductOwner = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userId = req.indentity._id;
+    const productId = req.params.id;
+
+    const getProduct = await getProductById(productId);
+    if (!getProduct) {
+      return res.status(400).json({ message: "Product Not Found" });
+    }
+    if (userId !== getProduct.seller) {
+      return res
+        .status(400)
+        .json({
+          message: "Unauthorized! You are not the owner of this product!",
+        });
+    }
     next();
   } catch (error) {
     console.log(error);

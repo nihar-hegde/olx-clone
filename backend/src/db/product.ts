@@ -16,6 +16,8 @@ export const createProduct = (value: Record<string, any>) =>
 
 export const getProductById = (id: string) => ProductModel.findById(id);
 
+export const getAllProducts = () => ProductModel.find().where("isSold", false);
+
 export const getProductBySellerId = (id: string) =>
   ProductModel.find({ seller: id });
 

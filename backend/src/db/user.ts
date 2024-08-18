@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
@@ -36,3 +37,11 @@ export const deleteUserById = (id: string) =>
 //NOTE: Update a user by their id:
 export const updateUserById = (id: string, value: Record<string, any>) =>
   UserModel.findByIdAndUpdate(id, value);
+
+export const postedProductUpdate = (
+  id: ObjectId | string,
+  productId: ObjectId | string
+) =>
+  UserModel.findByIdAndUpdate(id, {
+    $push: { postedProducts: productId },
+  });
