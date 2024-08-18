@@ -14,19 +14,19 @@ export const UserModel = mongoose.model("User", UserSchema);
 //NOTE:  User Actions
 
 //NOTE: Register user:
-export const register_user = (value: Record<string, any>) =>
+export const registerUser = (value: Record<string, any>) =>
   UserModel.create(value);
 
 //NOTE: get a user by their email:
 
-export const get_user_by_email = (email: string) =>
+export const getUserByEmail = (email: string) =>
   UserModel.findOne({ email }).select("+password");
 
 //NOTE: get a user by their id:
-export const get_user_by_id = (id: string) => UserModel.findById(id);
+export const getUserById = (id: string) => UserModel.findById(id);
 
 //NOTE: Get a user by their username:
-export const get_user_by_username = (username: string) =>
+export const getUserByUsername = (username: string) =>
   UserModel.findOne({ username });
 
 //NOTE: Delete a user by their id:

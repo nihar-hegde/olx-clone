@@ -3,7 +3,7 @@ import {
   login_validator,
   register_validator,
 } from "../validators/user.validator";
-import { get_user_by_email, register_user } from "../db/user";
+import { getUserByEmail, registerUser } from "../db/user";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -27,7 +27,7 @@ export const register = async (req: Request, res: Response) => {
       });
     } else {
       // check if email is already taken:
-      const existingUser = await get_user_by_email(validatedData.data.email);
+      const existingUser = await getUserByEmail(validatedData.data.email);
 
       if (existingUser) {
         return res.status(400).json({
@@ -42,7 +42,7 @@ export const register = async (req: Request, res: Response) => {
 
       const userData = { ...validatedData.data, password: hashedPassword };
 
-      const newUser = await register_user(userData);
+      const newUser = await registerUser(userData);
 
       if (newUser) {
         return res.status(201).json({
@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response) => {
         error: validatedData.error.message,
       });
     }
-    const user = await get_user_by_email(validatedData.data.email);
+    const user = await getUserByEmail(validatedData.data.email);
 
     if (!user) {
       return res.status(400).json({

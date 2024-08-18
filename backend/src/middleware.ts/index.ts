@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import e, { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { get_user_by_id } from "../db/user";
+import { getUserById } from "../db/user";
 
 dotenv.config();
 interface IdentidyI {
@@ -23,22 +23,22 @@ if (!process.env.JWT_SECRET) {
 }
 
 // NOTE: Middleware to verify the jwt token.
-
-export const verifyToken = async (
+export const isAuthenticated = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Authentication required. Please log in." });
+  }
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(403).send({ message: "No token provided!" });
-    }
-
     const verify = await jwt.verify(token, process.env.JWT_SECRET!);
     const id = (verify as JwtPayload).id;
 
-    const existingUser = await get_user_by_id(id);
+    const existingUser = await getUserById(id);
     if (!existingUser) {
       return res.status(403).send({ message: "User Not Found" });
     }
