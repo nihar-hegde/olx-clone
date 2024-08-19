@@ -47,7 +47,7 @@ export const isAuthenticated = async (
     next();
   } catch (error) {
     console.log(error);
-    return res.status(403).send({ error });
+    return res.status(401).json({ message: "Unauthorized, invalid token" });
   }
 };
 

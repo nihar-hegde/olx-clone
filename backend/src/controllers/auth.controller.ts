@@ -123,3 +123,12 @@ export const logout = (req: Request, res: Response) => {
   res.clearCookie("token");
   res.status(200).send({ message: "Logged out successfully" });
 };
+
+export const isLoggedIn = (req: Request, res: Response) => {
+  try {
+    const user = req.indentity;
+    res.json(user);
+  } catch (error) {
+    console.log(error);
+  }
+};
