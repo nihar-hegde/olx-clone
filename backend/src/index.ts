@@ -14,7 +14,13 @@ if (!process.env.PORT) {
 const port = process.env.PORT || 8080;
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL, // Replace with your frontend origin
+    credentials: true, // Required for withCredentials: true on frontend
+  })
+);
+
 app.use(express.json());
 app.use(cookieParser());
 

@@ -24,6 +24,7 @@ import { z } from "zod";
 import axios from "axios";
 import { useAuth } from "@/Providers/AuthProvider";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -47,10 +48,15 @@ export function LoginForm() {
         withCredentials: true,
       });
       setUser(response.data);
+      toast.success("Login successful!!");
+      form.reset();
       navigate("/dashboard");
     } catch (err) {
-      console.error("Login failed:", err);
+      toast.error("Invalid email or Password!");
+
+      form.reset();
       console.log(error);
+      console.error("Login failed:", err);
       setError("Invalid email or password");
     }
   };
