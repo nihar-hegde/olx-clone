@@ -7,6 +7,10 @@ import { Navbar } from "./components/shared/Navbar";
 import { Toaster } from "./components/ui/sonner";
 import { AuthProvider } from "./Providers/AuthProvider";
 import { ProtectedRoute } from "./components/auth/protectedRoutes";
+import Layout from "./components/Layout";
+import AddProduct from "./pages/AddProduct";
+import PurchasedProducts from "./pages/PurchasedProducts";
+import PostedProducts from "./pages/PostedProducts";
 
 function App() {
   return (
@@ -19,8 +23,15 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            {/* Add other protected routes here */}
+            <Route element={<Layout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/add-product" element={<AddProduct />} />
+              <Route
+                path="/purchased-products"
+                element={<PurchasedProducts />}
+              />
+              <Route path="/posted-products" element={<PostedProducts />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
