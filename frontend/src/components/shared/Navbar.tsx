@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { buttonVariants } from "../ui/button";
 import { useAuth } from "@/Providers/AuthProvider";
+import { AvatarComponent } from "./AvatarComponent";
 
 export const Navbar = () => {
   const { user } = useAuth();
@@ -11,10 +12,7 @@ export const Navbar = () => {
           <Link to="/">Home</Link>
         </div>
         {user ? (
-          <div className="flex gap-4">
-            <p>Welcome {user.name}</p>
-            <p>{user.email}</p>
-          </div>
+          <AvatarComponent />
         ) : (
           <div className="flex gap-4">
             <Link
