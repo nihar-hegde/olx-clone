@@ -1,16 +1,66 @@
+import { PostedProductCard } from "@/components/shared/PostedProductCard";
+import { Product } from "@/types/type";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 const PostedProducts: React.FC = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch posted products from backend
+    const fetchPostedProducts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`${BASE_URL}/product/posted`, {
+          withCredentials: true,
+        });
+        const data = await response.data;
+        if (Array.isArray(data.products.postedProducts)) {
+          setProducts(data.products.postedProducts);
+        } else {
+          setError("Received invalid data format");
+        }
+      } catch (error) {
+        console.error("An unexpected error occurred:", error);
+        setError("Failed to fetch products");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPostedProducts();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div>
       <h1 className="text-2xl font-semibold ml-10">Posted Products</h1>
-      {/* Display the posted products here */}
+      <div className="flex justify-start flex-wrap gap-4">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <PostedProductCard
+              key={product._id}
+              _id={product._id}
+              productName={product.productName}
+              price={product.price}
+              imageUrl={product.imageUrl}
+            />
+          ))
+        ) : (
+          <div>
+            <p>No products posted yet</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
