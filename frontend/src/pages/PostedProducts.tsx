@@ -18,13 +18,14 @@ const PostedProducts: React.FC = () => {
           withCredentials: true,
         });
         const data = await response.data;
+        console.log(data);
         if (Array.isArray(data.products.postedProducts)) {
           setProducts(data.products.postedProducts);
         } else {
           setError("Received invalid data format");
         }
       } catch (error) {
-        console.error("An unexpected error occurred:", error);
+        console.log("An unexpected error occurred:", error);
         setError("Failed to fetch products");
       } finally {
         setIsLoading(false);

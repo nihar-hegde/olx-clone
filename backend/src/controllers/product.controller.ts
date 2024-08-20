@@ -23,6 +23,17 @@ export const getAllUnsoldProducts = async (req: Request, res: Response) => {
   }
 };
 
+export const getSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const productId = req.params.id;
+    const product = await getProductById(productId);
+    res.status(200).json({ message: "Product fetched successfully!", product });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 export const addProduct = async (req: Request, res: Response) => {
   try {
     const data = req.body;
@@ -149,6 +160,7 @@ export const getAllPurchasedProducts = async (req: Request, res: Response) => {
     const products = await UserModel.findById(userId).populate(
       "purchasedProducts"
     );
+
     res
       .status(200)
       .json({ message: "Products fetched successfully!", products });

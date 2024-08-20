@@ -25,7 +25,14 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/add-product" element={<AddProduct />} />
+              <Route
+                path="/add-product"
+                element={<AddProduct mode="create" />}
+              />
+              <Route
+                path="/edit-product/:id"
+                element={<AddProduct mode="edit" />}
+              />
               <Route
                 path="/purchased-products"
                 element={<PurchasedProducts />}

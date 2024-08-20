@@ -7,9 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -56,7 +57,12 @@ export const PostedProductCard = (props: PostedProductCardProps) => {
           </div>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
-          <Button className="w-full">Edit</Button>
+          <Link
+            to={`/edit-product/${props._id}`}
+            className={`${buttonVariants()} w-full`}
+          >
+            Edit
+          </Link>
           <Button
             className="w-full"
             variant={"destructive"}

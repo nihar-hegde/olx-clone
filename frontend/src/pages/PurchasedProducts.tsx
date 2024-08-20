@@ -14,9 +14,13 @@ const PurchasedProducts: React.FC = () => {
     const fetchPostedProducts = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`${BASE_URL}/product/purchased`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${BASE_URL}/product/purchased`,
+
+          {
+            withCredentials: true,
+          }
+        );
         const data = await response.data;
         setProducts(data.products.purchasedProducts);
       } catch (error) {
