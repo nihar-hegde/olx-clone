@@ -46,6 +46,11 @@ cd frontend
 
 - Rename the .env.example file to .env:
 - Open the .env file and add your backend URL.
+- Install the required dependencies:
+
+```bash
+npm install
+```
 
 ### 4. Run the Project
 
