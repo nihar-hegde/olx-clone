@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Product } from "@/types/type";
 import {
   Card,
@@ -7,8 +8,37 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
+import axios from "axios";
+import { toast } from "sonner";
 
-export const PostedProductCard = (props: Product) => {
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true,
+});
+
+interface PostedProductCardProps extends Product {
+  onDelete: (id: string) => void;
+}
+
+export const PostedProductCard = (props: PostedProductCardProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDelete = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await api.delete(`/product/${id}`);
+      toast.success("Product deleted successfully");
+      props.onDelete(id);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete product");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <Card>
@@ -27,8 +57,13 @@ export const PostedProductCard = (props: Product) => {
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
           <Button className="w-full">Edit</Button>
-          <Button className="w-full" variant={"destructive"}>
-            Delete
+          <Button
+            className="w-full"
+            variant={"destructive"}
+            onClick={() => handleDelete(props._id)}
+            disabled={isLoading}
+          >
+            {isLoading ? "Deleting..." : "Delete"}
           </Button>
         </CardFooter>
       </Card>

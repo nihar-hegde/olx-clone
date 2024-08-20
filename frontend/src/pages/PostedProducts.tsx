@@ -40,10 +40,21 @@ const PostedProducts: React.FC = () => {
   if (error) {
     return <div>Error: {error}</div>;
   }
+  const handleDelete = (deletedId: string) => {
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product._id !== deletedId)
+    );
+  };
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold ml-10">Posted Products</h1>
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-semibold">Posted Products</h1>
+        <h2 className="font-semibold text-lg">
+          Products you have posted for sale.
+        </h2>
+      </div>
+
       <div className="flex justify-start flex-wrap gap-4">
         {products.length > 0 ? (
           products.map((product) => (
@@ -53,6 +64,7 @@ const PostedProducts: React.FC = () => {
               productName={product.productName}
               price={product.price}
               imageUrl={product.imageUrl}
+              onDelete={handleDelete}
             />
           ))
         ) : (

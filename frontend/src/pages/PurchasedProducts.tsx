@@ -1,16 +1,64 @@
+import { PurchasedProductCard } from "@/components/shared/PurchasedProductCard";
+import { Product } from "@/types/type";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
 const PurchasedProducts: React.FC = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch purchased products from backend
+    const fetchPostedProducts = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`${BASE_URL}/product/purchased`, {
+          withCredentials: true,
+        });
+        const data = await response.data;
+        setProducts(data.products.purchasedProducts);
+      } catch (error) {
+        console.error("An unexpected error occurred:", error);
+        setError("Failed to fetch products");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPostedProducts();
   }, []);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
   return (
-    <div className="p-20">
-      <h1 className="text-2xl font-semibold ml-10">Purchased Products</h1>
-      {/* Display the purchased products here */}
+    <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-2xl font-semibold">Purchased Products</h1>
+        <h2 className="font-semibold text-lg">Products you have purchased.</h2>
+      </div>
+      <div className="flex justify-start flex-wrap gap-4">
+        {products.length > 0 ? (
+          products.map((product) => (
+            <PurchasedProductCard
+              key={product._id}
+              _id={product._id}
+              productName={product.productName}
+              price={product.price}
+              imageUrl={product.imageUrl}
+            />
+          ))
+        ) : (
+          <div>
+            <p>No products posted yet</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
