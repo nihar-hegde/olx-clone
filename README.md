@@ -17,7 +17,7 @@ Make sure you have the following installed on your machine:
 First, clone the repository to your local machine:
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/nihar-hegde/olx-clone.git
 ```
 
 ### 2. Setup the Backend
