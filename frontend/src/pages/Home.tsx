@@ -3,17 +3,23 @@ import useProduct from "@/hooks/useProduct";
 
 const Home = () => {
   const { products } = useProduct();
-  console.log(products);
+
   return (
-    <main className="p-6 ">
+    <main className="p-6">
       <div className="container mx-auto">
-        <div className="flex justify-start flex-wrap gap-4">
-          {products.map((product) => (
-            <div key={product._id}>
-              <ProductCard {...product} />
-            </div>
-          ))}
-        </div>
+        {products.length > 0 ? (
+          <div className="flex justify-start flex-wrap gap-4">
+            {products.map((product) => (
+              <div key={product._id}>
+                <ProductCard {...product} />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-800 text-2xl font-semibold">
+            No products available
+          </p>
+        )}
       </div>
     </main>
   );

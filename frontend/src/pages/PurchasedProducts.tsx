@@ -59,7 +59,7 @@ const PurchasedProducts: React.FC = () => {
           ))
         ) : (
           <div>
-            <p>No products posted yet</p>
+            <p>No products Purchased yet</p>
           </div>
         )}
       </div>

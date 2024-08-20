@@ -9,6 +9,7 @@ import {
 import { Button } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -18,10 +19,15 @@ const api = axios.create({
 });
 
 export const ProductCard = (props: Product) => {
+  const navigate = useNavigate();
   const onClick = async (id: string) => {
     try {
       const response = await api.put(`/product/buy/${id}`);
-      const data = response.data;
+      const data = await response.data;
+      if (data.message) {
+        toast.success("Product purchased successfully");
+      }
+      navigate("/purchased-products");
       console.log(data);
     } catch (error) {
       console.error(error);

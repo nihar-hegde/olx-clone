@@ -9,7 +9,12 @@ export const Navbar = () => {
     <nav className="border-b">
       <div className="flex justify-between items-center p-6">
         <div>
-          <Link to="/">Home</Link>
+          <Link
+            to="/"
+            className=" text-xl font-bold p-4 rounded-lg transform transition duration-500 hover:bg-gray-200"
+          >
+            OLX CLONE
+          </Link>
         </div>
         {user ? (
           <AvatarComponent />
