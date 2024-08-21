@@ -73,6 +73,7 @@ const PostedProducts: React.FC = () => {
               key={product._id}
               _id={product._id}
               productName={product.productName}
+              isSold={product.isSold}
               price={product.price}
               imageUrl={product.imageUrl}
               onDelete={handleDelete}

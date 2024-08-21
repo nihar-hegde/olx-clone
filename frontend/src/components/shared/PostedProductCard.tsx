@@ -55,6 +55,15 @@ export const PostedProductCard = (props: PostedProductCardProps) => {
               className="w-full h-44"
             />
             <p className="text-lg font-bold">Price: ${props.price}</p>
+            {props.isSold ? (
+              <p className="text-lg font-bold p-2 rounded-md bg-green-400">
+                Sold
+              </p>
+            ) : (
+              <p className="text-lg font-bold p-2 rounded-md bg-gray-200">
+                Not Sold
+              </p>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-center gap-2">
