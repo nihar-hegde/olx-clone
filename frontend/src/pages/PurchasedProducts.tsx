@@ -1,3 +1,4 @@
+import { ProductSkeleton } from "@/components/shared/ProductSkeleton";
 import { PurchasedProductCard } from "@/components/shared/PurchasedProductCard";
 import { Product } from "@/types/type";
 import axios from "axios";
@@ -34,7 +35,16 @@ const PurchasedProducts: React.FC = () => {
   }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-start flex-wrap gap-4">
+        {/* Render 8 skeleton cards while loading */}
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div key={index}>
+            <ProductSkeleton />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   if (error) {
