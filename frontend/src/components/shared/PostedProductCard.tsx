@@ -11,6 +11,7 @@ import { Button, buttonVariants } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
+import { Loader } from "lucide-react";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -69,7 +70,7 @@ export const PostedProductCard = (props: PostedProductCardProps) => {
             onClick={() => handleDelete(props._id)}
             disabled={isLoading}
           >
-            {isLoading ? "Deleting..." : "Delete"}
+            {isLoading ? <Loader className="w-5 h-5 animate-spin" /> : "Delete"}
           </Button>
         </CardFooter>
       </Card>

@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Loader } from "lucide-react";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -19,9 +21,11 @@ const api = axios.create({
 });
 
 export const ProductCard = (props: Product) => {
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const onClick = async (id: string) => {
     try {
+      setLoading(true);
       const response = await api.put(`/product/buy/${id}`);
       const data = await response.data;
       if (data.message) {
@@ -30,6 +34,7 @@ export const ProductCard = (props: Product) => {
       navigate("/purchased-products");
       console.log(data);
     } catch (error) {
+      setLoading(false);
       console.error(error);
       if (axios.isAxiosError(error) && error.response) {
         if (
@@ -43,6 +48,8 @@ export const ProductCard = (props: Product) => {
       } else {
         toast.error("An unexpected error occurred");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +71,7 @@ export const ProductCard = (props: Product) => {
         </CardContent>
         <CardFooter>
           <Button className="w-full" onClick={() => onClick(props._id)}>
-            Buy Now
+            {loading ? <Loader className="w-5 h-5 animate-spin" /> : "Buy Now"}
           </Button>
         </CardFooter>
       </Card>

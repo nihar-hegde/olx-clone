@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "sonner";
+import { Loader } from "lucide-react";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -163,13 +164,17 @@ export function ProductForm({ mode, id }: ProductFormProps) {
             />
 
             <Button className="w-full" type="submit" disabled={isLoading}>
-              {mode === "create"
-                ? isLoading
-                  ? "Loading..."
-                  : "Add Product"
-                : isLoading
-                ? "Loading..."
-                : "Update Product"}
+              {mode === "create" ? (
+                isLoading ? (
+                  <Loader className="w-5 h-5 animate-spin" />
+                ) : (
+                  "Add Product"
+                )
+              ) : isLoading ? (
+                <Loader className="w-5 h-5 animate-spin" />
+              ) : (
+                "Update Product"
+              )}
             </Button>
           </form>
         </Form>
