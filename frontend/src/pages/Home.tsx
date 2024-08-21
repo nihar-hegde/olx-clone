@@ -10,7 +10,6 @@ const Home = () => {
       <div className="container mx-auto">
         {loading ? (
           <div className="flex justify-start flex-wrap gap-4">
-            {/* Render 8 skeleton cards while loading */}
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={index}>
                 <ProductSkeleton />

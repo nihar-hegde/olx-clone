@@ -23,8 +23,11 @@ const useProduct = (): UseProductsResponse => {
         const data = await response.data;
         setProducts(data.products); // Set the products array to the state
       } catch (error) {
+        setLoading(false);
         setError("Error fetching products!");
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
