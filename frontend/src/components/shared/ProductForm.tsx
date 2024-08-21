@@ -162,7 +162,7 @@ export function ProductForm({ mode, id }: ProductFormProps) {
               )}
             />
 
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={isLoading}>
               {mode === "create"
                 ? isLoading
                   ? "Loading..."

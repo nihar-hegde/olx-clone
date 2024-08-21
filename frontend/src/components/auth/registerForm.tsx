@@ -153,7 +153,7 @@ export function RegisterForm() {
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={isLoading}>
               {isLoading ? "Loading..." : "Submit"}
             </Button>
           </form>
