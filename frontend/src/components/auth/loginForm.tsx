@@ -33,7 +33,6 @@ export function LoginForm() {
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
-
       password: "",
     },
   });
@@ -41,9 +40,11 @@ export function LoginForm() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(`${BASE_URL}/auth/login`, data, {
         withCredentials: true,
       });
@@ -52,12 +53,14 @@ export function LoginForm() {
       form.reset();
       navigate("/dashboard");
     } catch (err) {
+      setIsLoading(false);
       toast.error("Invalid email or Password!");
-
       form.reset();
       console.log(error);
       console.error("Login failed:", err);
       setError("Invalid email or password");
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -99,8 +102,8 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
-              Submit
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? "Loading..." : "Submit"}
             </Button>
           </form>
         </Form>

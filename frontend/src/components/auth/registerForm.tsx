@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "sonner";
+import { useState } from "react";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -37,10 +38,13 @@ export function RegisterForm() {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
     try {
+      setIsLoading(true);
       const response = await axios.post(`${BASE_URL}/auth/register`, data);
 
       await response.data;
@@ -48,6 +52,7 @@ export function RegisterForm() {
       toast.success("Successfully registered!");
       navigate("/login");
     } catch (error) {
+      setIsLoading(false);
       if (axios.isAxiosError(error) && error.response?.status === 400) {
         // Check if the error message indicates that the email is already taken
         if (error.response.data.message === "Email already taken") {
@@ -77,6 +82,8 @@ export function RegisterForm() {
         console.error("An unexpected error occurred:", error);
         toast.error("An unexpected error occurred. Please try again.");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -147,7 +154,7 @@ export function RegisterForm() {
               )}
             />
             <Button className="w-full" type="submit">
-              Submit
+              {isLoading ? "Loading..." : "Submit"}
             </Button>
           </form>
         </Form>

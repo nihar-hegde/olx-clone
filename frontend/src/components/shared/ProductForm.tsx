@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,7 +34,7 @@ interface ProductFormProps {
 
 export function ProductForm({ mode, id }: ProductFormProps) {
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
@@ -67,6 +67,7 @@ export function ProductForm({ mode, id }: ProductFormProps) {
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     try {
+      setIsLoading(true);
       let response;
       if (mode === "create") {
         response = await axios.post(
@@ -94,12 +95,15 @@ export function ProductForm({ mode, id }: ProductFormProps) {
       console.log(response.data);
       navigate("/posted-products");
     } catch (error) {
+      setIsLoading(false);
       toast.error(
         mode === "create"
           ? "Product could not be added!"
           : "Product could not be updated!"
       );
       console.error("An unexpected error occurred:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -159,7 +163,13 @@ export function ProductForm({ mode, id }: ProductFormProps) {
             />
 
             <Button className="w-full" type="submit">
-              {mode === "create" ? "Add Product" : "Update Product"}
+              {mode === "create"
+                ? isLoading
+                  ? "Loading..."
+                  : "Add Product"
+                : isLoading
+                ? "Loading..."
+                : "Update Product"}
             </Button>
           </form>
         </Form>
